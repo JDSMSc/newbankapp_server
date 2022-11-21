@@ -18,6 +18,7 @@ public class Account {
         return (accountName + ": " + openingBalance);
     }
 
+    //Returns the type of account to the program.
     public String getType(){
         switch (accountType){
             case 1:
