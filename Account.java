@@ -1,22 +1,11 @@
 package newbank.server;
 
 public class Account {
-	
-	private String accountName;
-	private double openingBalance;
 
-	public Account(String accountName, double openingBalance) {
-		this.accountName = accountName;
-		this.openingBalance = openingBalance;
-	}
-	
-	public String toString() {
-		return (accountName + ": " + openingBalance);
-	}
-
-<<<<<<< HEAD
-    private String accountType;
+    private int accountType;
     private double openingBalance;
+
+    private String accountName;
 
     //Set account type to 1-"CURRENT", 2-"SAVING" or 3-"MULTI"
     public Account(String accountName, double openingBalance, int type) {
@@ -31,17 +20,16 @@ public class Account {
 
     //Returns the type of account to the program.
     public String getType(){
+        String returnStr = "";
         switch (accountType){
             case 1:
-                return "This is a current account.";
+                returnStr = "This is a current account.";
             case 2:
-                return "This is a savings account.";
+                returnStr = "This is a savings account.";
             case 3:
-                return "This is a multi-currency account";
+                returnStr =  "This is a multi-currency account";
         }
+        return returnStr;
     }
 
 }
-=======
-}
->>>>>>> origin/main
