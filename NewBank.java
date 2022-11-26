@@ -30,16 +30,22 @@ public class NewBank {
 		return bank;
 	}
 	
-	public synchronized CustomerID checkLogInDetails(String userName, String password) {
+	public synchronized Customer checkLogInDetails(String userName, String password) {
+
 		if(customers.containsKey(userName)) {
-			return new CustomerID(userName);
+			Customer cust = customers.get(userName);
+			if (cust.getPassword().equals(password)) {
+				return cust;
+			}
 		}
 		return null;
 	}
 
 	// commands from the NewBank customer are processed in this method
-	public synchronized String processRequest(CustomerID customer, String request) {
-		if(customers.containsKey(customer.getKey())) {
+	//Commands are verified by checking the hashmap of contains contains a key equal to the firstname of the customer
+	//This can be updated to the username in a future sprint
+	public synchronized String processRequest(Customer customer, String request) {
+		if(customers.containsKey(customer.getFirstName())) {
 			switch(request) {
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
 			default : return "FAIL";
@@ -48,8 +54,8 @@ public class NewBank {
 		return "FAIL";
 	}
 	
-	private String showMyAccounts(CustomerID customer) {
-		return (customers.get(customer.getKey())).accountsToString();
+	private String showMyAccounts(Customer customer) {
+		return (customers.get(customer.getFirstName())).accountsToString();
 	}
 
 }

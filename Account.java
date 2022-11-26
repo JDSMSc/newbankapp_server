@@ -16,7 +16,7 @@ public class Account {
         this.openingBalance = openingBalance;
         this.accountType = type;
 
-        //Generate new random number for Account idNumber.
+        //Generate new random 7 digit number for Account idNumber.
         Random rand = new Random();
         int randNum = rand.nextInt(9000000) + 1000000;
         this.idNumber = randNum;
