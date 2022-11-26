@@ -15,7 +15,7 @@ public class Account {
     }
 
     public String toString() {
-        return (accountName + ": " + openingBalance);
+        return (this.getType() + ": " + accountName + ": " + openingBalance);
     }
 
     //Returns the type of account to the program.
@@ -23,11 +23,11 @@ public class Account {
         String returnStr = "";
         switch (accountType){
             case 1:
-                returnStr = "This is a current account.";
+                returnStr = "current account";
             case 2:
-                returnStr = "This is a savings account.";
+                returnStr = "savings account";
             case 3:
-                returnStr =  "This is a multi-currency account";
+                returnStr =  "multi-currency account";
         }
         return returnStr;
     }
