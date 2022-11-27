@@ -29,7 +29,9 @@ public class NewBank {
 	public static NewBank getBank() {
 		return bank;
 	}
-	
+
+	//If the customers hashmap contains the first name of the customer then retrieve that Customer
+	// and validate the password. Returns the customer object to the ClientHandler
 	public synchronized Customer checkLogInDetails(String userName, String password) {
 
 		if(customers.containsKey(userName)) {
