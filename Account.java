@@ -27,15 +27,21 @@ public class Account {
     }
 
     //Returns the type of account to the program.
+    //Updated Switch statement for default case incase of failure.
     public String getType(){
         String returnStr = "";
-        switch (accountType){
+        switch (this.accountType){
             case 1:
-                returnStr = "current account";
+                returnStr = "Current Account";
+                break;
             case 2:
-                returnStr = "savings account";
+                returnStr = "Savings Account";
+                break;
             case 3:
-                returnStr =  "multi-currency account";
+                returnStr =  "Multi-Currency Account";
+                break;
+            default:
+                returnStr = "Bank Account";
         }
         return returnStr;
     }
