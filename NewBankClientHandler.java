@@ -31,6 +31,13 @@ public class NewBankClientHandler extends Thread{
 						out.println("Log In Successful. What do you want to do?");
 						while (true) {
 							String request = in.readLine();
+							//If user wishes to log out, reset customerToLogin and break, print status.
+							if (request.equals("LOGOUT")) {
+								System.out.println("Request from " + customerToLogin.getUserName());
+								customerToLogin = null;
+								out.println("Logging out.\n");
+								break;
+							}
 							System.out.println("Request from " + customerToLogin.getUserName());
 							String response = bank.processRequest(customerToLogin, request);
 							out.println(response);
