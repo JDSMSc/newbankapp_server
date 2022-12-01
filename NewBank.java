@@ -16,15 +16,15 @@ public class NewBank {
 		Customer bhagy = new Customer("bhagy@gmail.com", "password", "Bhagy", "Smith");
 		bhagy.addAccount(new Account("Main", 1000.0, 1));
 		bhagy.addAccount(new Account("Secondary", 100000.0, 2));
-		customers.put("Bhagy", bhagy);
+		customers.put(bhagy.getUserName(), bhagy);
 		
 		Customer christina = new Customer("christina@gmail.com", "password", "Christina", "Smith");
 		christina.addAccount(new Account("Savings", 1500.0, 2));
-		customers.put("Christina", christina);
+		customers.put(christina.getUserName(), christina);
 		
 		Customer john = new Customer("john@gmail.com", "password", "John", "Smith");
 		john.addAccount(new Account("Checking", 250.0, 3));
-		customers.put("John", john);
+		customers.put(john.getUserName(), john);
 	}
 	
 	public static NewBank getBank() {
