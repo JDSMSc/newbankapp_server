@@ -54,8 +54,8 @@ public class NewBankClientHandler extends Thread{
 									out.println(result);
 									//The password is changed at root in the NewBank class so need to update local records.
 									this.bank = NewBank.getBank();
-									request = null;
 									out.println(getBankResponse(currentCustomer, request));
+									request = null;
 								}
 							}
 
