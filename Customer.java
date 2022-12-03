@@ -28,6 +28,10 @@ public class Customer {
 	}
 
 
+	public Boolean setPassword(String newPass) {
+		this.password = newPass;
+		return true;
+	}
 
 	public Customer(String email, String password, String firstName, String lastName)
 	{

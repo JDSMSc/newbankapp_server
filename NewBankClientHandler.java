@@ -1,5 +1,7 @@
 package newbank.server;
 
+import newbank.server.NewBank;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +11,7 @@ import java.net.Socket;
 public class NewBankClientHandler extends Thread{
 	
 	private NewBank bank;
-	private BufferedReader in;
+	private static BufferedReader in;
 	private PrintWriter out;
 	
 	
@@ -24,27 +26,50 @@ public class NewBankClientHandler extends Thread{
 		// keep getting requests from the client and processing them.
 			try {
 				while (true) {
-					Customer customerToLogin = this.callLogin();
+					Customer currentCustomer = this.callLogin();
 					// if the user is authenticated then get requests from the user and process them with the
 					// appropriate customer object.
-					if (customerToLogin != null) {
+					if (currentCustomer != null) {
 						out.println("Log In Successful. What do you want to do?");
 						while (true) {
 							String request = in.readLine();
-							//If user wishes to log out, reset customerToLogin and break, print status.
+
+							//If user wishes to log out, reset currentCustomer and break, print status.
 							if (request.equals("LOGOUT")) {
-								System.out.println("Request from " + customerToLogin.getUserName());
-								customerToLogin = null;
-								out.println("Logging out.\n");
+								System.out.println("Request from " + currentCustomer.getUserName());
+								currentCustomer = null;
+								out.println("Logging out...");
 								break;
 							}
-							System.out.println("Request from " + customerToLogin.getUserName());
-							String response = bank.processRequest(customerToLogin, request);
-							out.println(response);
+
+							//Authorisation for password change happens in client handler itself,
+							//The actual password change is done by the bank in NewBank.
+							//3 attempts are given to change the password to prevent brute force attack.
+							if (request.equals("CHANGEPASS")) {
+								out.println("Enter current password");
+								String attempt = in.readLine();
+								if (currentCustomer.getPassword().equals(attempt)) {
+									out.println("...\nEnter new password of at least length 7.");
+									String result = bank.processRequest(currentCustomer, "CHANGEPASS");
+									out.println(result);
+									//The password is changed at root in the NewBank class so need to update local records.
+									this.bank = NewBank.getBank();
+									request = null;
+									out.println(getBankResponse(currentCustomer, request));
+								}
+							}
+
+							if (request != null) {
+								out.println(getBankResponse(currentCustomer, request));
+							}
+
+							//System.out.println("Request from " + currentCustomer.getUserName());
+							//String response = bank.processRequest(currentCustomer, request);
+							//out.println(response);
 						}
 					} else {
 						out.println("Log In Failed\n");
-						//customerToLogin = this.callLogin();
+						//currentCustomer = this.callLogin();
 					}
 				}
 			} catch (IOException e) {
@@ -79,6 +104,26 @@ public class NewBankClientHandler extends Thread{
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	//Static method to allow the NewBank class to get user input without creating additional buffered readers.
+	//Returns the input string to the method that calls it.
+	public static String getInput() {
+		try {
+			String input = in.readLine();
+			return input;
+		}
+		catch (IOException exception) {
+			//In event of failure
+			return null;
+		}
+	}
+
+	//
+	public String getBankResponse(Customer customer, String request) {
+		System.out.println("Request from " + customer.getUserName());
+		String response = bank.processRequest(customer, request);
+		return response;
 	}
 
 }

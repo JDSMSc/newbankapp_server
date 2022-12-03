@@ -1,5 +1,7 @@
 package newbank.server;
 
+import newbank.server.NewBankClientHandler;
+
 import java.util.HashMap;
 
 public class NewBank {
@@ -31,7 +33,7 @@ public class NewBank {
 		return bank;
 	}
 
-	//If the customers hashmap contains the first name of the customer then retrieve that Customer
+	//If the customers hashmap contains the username of the customer then retrieve that Customer
 	// and validate the password. Returns the customer object to the ClientHandler
 	public synchronized Customer checkLogInDetails(String userName, String password) {
 
@@ -45,12 +47,22 @@ public class NewBank {
 	}
 
 	// commands from the NewBank customer are processed in this method
-	//Commands are verified by checking the hashmap of contains contains a key equal to the firstname of the customer
+	//Commands are verified by checking the hashmap of contains a key equal to the firstname of the customer
 	//This can be updated to the username in a future sprint
 	public synchronized String processRequest(Customer customer, String request) {
-		if(customers.containsKey(customer.getFirstName())) {
+		if(customers.containsKey(customer.getUserName())) {
 			switch(request) {
-			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
+			case "SHOWMYACCOUNTS" :
+				return showMyAccounts(customer);
+			case "CHANGEPASS" :
+				//if newPass is 7 or greater then change in the bank database.
+				String newPass = NewBankClientHandler.getInput();
+				if (newPass.length() >= 7) {
+					Customer cust = customers.get(customer.getUserName());
+					Boolean result = cust.setPassword(newPass);
+					return "...\nPassword change confirmed: " + result;
+				}
+				return "Failed";
 			default : return "FAIL";
 			}
 		}
@@ -58,7 +70,11 @@ public class NewBank {
 	}
 	
 	private String showMyAccounts(Customer customer) {
-		return (customers.get(customer.getFirstName())).accountsToString();
+		return (customers.get(customer.getUserName())).accountsToString();
+	}
+
+	private String changePassword(String newPass) {
+		return null;
 	}
 
 }
