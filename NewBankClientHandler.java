@@ -19,6 +19,17 @@ public class NewBankClientHandler extends Thread {
         out = new PrintWriter(s.getOutputStream(), true);
     }
 
+    private String addAccount(Customer customer ) throws IOException {
+        out.println("Account Type: 1. Current 2. Savings 3. Multi-Currency");
+        int accountType = Integer.parseInt(in.readLine());
+        out.println("Enter Account Name");
+        String accountName = in.readLine();
+        out.println("Enter Initial Deposit");
+        String initialDeposit = in.readLine();
+        customer.addAccount(new Account(accountName, Double.parseDouble(initialDeposit), accountType));
+        return "Account Created";
+    }
+
     public void run() {
         //While loop to continue taking login attempts until success. Once successful it will
         // keep getting requests from the client and processing them.
@@ -38,7 +49,10 @@ public class NewBankClientHandler extends Thread {
                             out.println("Logging out.\n");
                             break;
                         }
-                        System.out.println("Request from " + customerToLogin.getUserName() + "requesting " + request);
+                        if (request.equals("ADDACCOUNT")) {
+                            addAccount(customerToLogin);
+                        }
+                        System.out.println("Request from " + customerToLogin.getUserName() + " requesting " + request);
                         String response = bank.processRequest(customerToLogin, request);
                         out.println(response);
                     }
@@ -90,6 +104,7 @@ public class NewBankClientHandler extends Thread {
                 String initialDeposit = in.readLine();
                 return bank.addCustomer(firstName, lastName, email, password, accountType, accountName, Double.parseDouble(initialDeposit));
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

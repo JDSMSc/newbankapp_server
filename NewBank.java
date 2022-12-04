@@ -1,11 +1,18 @@
 package newbank.server;
 
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.io.BufferedReader;
+import static java.lang.System.out;
+
 
 public class NewBank {
 
     private static final NewBank bank = new NewBank();
     private HashMap<String, Customer> customers;
+    private BufferedReader in;
 
     private NewBank() {
         customers = new HashMap<>();
@@ -48,6 +55,7 @@ public class NewBank {
         Customer newCustomer = new Customer(email, password, firstName, lastName);
         newCustomer.addAccount(new Account(accountName, openingBalance, accountType));
         customers.put(newCustomer.getUserName(), newCustomer);
+        checkLogInDetails(newCustomer.getUserName(), newCustomer.getPassword());
         return newCustomer;
     }
 
@@ -55,13 +63,13 @@ public class NewBank {
     // commands from the NewBank customer are processed in this method
     //Commands are verified by checking the hashmap of contains contains a key equal to the firstname of the customer
     //This can be updated to the username in a future sprint
-    public synchronized String processRequest(Customer customer, String request) {
+    public synchronized String processRequest(Customer customer, String request) throws IOException {
         if (customers.containsKey(customer.getUserName())) {
             switch (request) {
                 case "SHOWMYACCOUNTS":
                     return showMyAccounts(customer);
-                case "SHOW1":
-                    return showMyAccounts(customer);
+                case "ADDACCOUNT":
+                    return "Account Added";
                 default:
                     return "FAIL";
             }
@@ -73,5 +81,6 @@ public class NewBank {
         return customer.accountsToString();
         //return (customers.get(customer.getFirstName())).accountsToString();
     }
+
 
 }
