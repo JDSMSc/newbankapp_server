@@ -52,6 +52,11 @@ public class NewBankClientHandler extends Thread {
                         if (request.equals("ADDACCOUNT")) {
                             addAccount(customerToLogin);
                         }
+
+                        if (request.equals("CHANGEPASS")) {
+                            changePassword(customerToLogin);
+                        }
+
                         System.out.println("Request from " + customerToLogin.getUserName() + " requesting " + request);
                         String response = bank.processRequest(customerToLogin, request);
                         out.println(response);
@@ -109,6 +114,29 @@ public class NewBankClientHandler extends Thread {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void changePassword(Customer customer) {
+        out.println("Enter current password: ");
+        try {
+            String currentPass = in.readLine();
+            if (currentPass.equals(customer.getPassword())) {
+                int tries = 3;
+                while (tries > 0) {
+                    out.println("Enter new password of at least length 7...");
+                    String newPass = in.readLine();
+                    if (newPass.length() >= 7) {
+                        customer.setPassword(newPass);
+                        out.println("Password change confirmed.");
+                        break;
+                    }
+                    tries -= 1;
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
