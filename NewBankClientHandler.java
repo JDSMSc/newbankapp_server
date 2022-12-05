@@ -116,6 +116,8 @@ public class NewBankClientHandler extends Thread {
         return null;
     }
 
+    //Change password on the customerToLogin, if a correct current password is entered.
+    //3 attempts given, at which point the method ends.
     private void changePassword(Customer customer) {
         out.println("Enter current password: ");
         try {
@@ -131,7 +133,12 @@ public class NewBankClientHandler extends Thread {
                         break;
                     }
                     tries -= 1;
+                    if (tries == 0) {
+                        out.println("3 invalid attempts made, ending password change.");
+                    }
                 }
+            } else {
+                out.println("\nIncorrect current password entered, returning to menu.");
             }
         }
         catch (IOException e) {
