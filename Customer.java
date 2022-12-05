@@ -27,6 +27,9 @@ public class Customer {
 		return this.password;
 	}
 
+	public void setPassword(String newPassword){
+		this.password = newPassword;
+	}
 
 
 	public Customer(String email, String password, String firstName, String lastName)
