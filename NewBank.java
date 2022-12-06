@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.io.BufferedReader;
+
 import static java.lang.System.out;
 
 
@@ -21,16 +22,16 @@ public class NewBank {
 
     private void addTestData() {
         Customer bhagy = new Customer("bhagy@gmail.com", "password", "Bhagy", "Smith");
-        bhagy.addAccount(new Account("Main", 1000.0, 1));
-        bhagy.addAccount(new Account("Secondary", 100000.0, 2));
+        bhagy.addAccount(new Account("Main", 1000.0, 1, "GBP"));
+        bhagy.addAccount(new Account("Secondary", 100000.0, 2, "GBP"));
         customers.put(bhagy.getUserName(), bhagy);
 
         Customer christina = new Customer("christina@gmail.com", "password", "Christina", "Smith");
-        christina.addAccount(new Account("Savings", 1500.0, 2));
+        christina.addAccount(new Account("Savings", 1500.0, 2, "GBP"));
         customers.put(christina.getUserName(), christina);
 
         Customer john = new Customer("john@gmail.com", "password", "John", "Smith");
-        john.addAccount(new Account("Checking", 250.0, 3));
+        john.addAccount(new Account("Checking", 250.0, 3, "GBP"));
         customers.put(john.getUserName(), john);
     }
 
@@ -51,9 +52,9 @@ public class NewBank {
         return null;
     }
 
-    public synchronized Customer addCustomer(String email, String password, String firstName, String lastName, int accountType, String accountName, double openingBalance) {
+    public synchronized Customer addCustomer(String email, String password, String firstName, String lastName, int accountType, String accountName, double openingBalance, String currency) {
         Customer newCustomer = new Customer(email, password, firstName, lastName);
-        newCustomer.addAccount(new Account(accountName, openingBalance, accountType));
+        newCustomer.addAccount(new Account(accountName, openingBalance, accountType, currency));
         customers.put(newCustomer.getUserName(), newCustomer);
         checkLogInDetails(newCustomer.getUserName(), newCustomer.getPassword());
         return newCustomer;
