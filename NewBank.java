@@ -67,9 +67,9 @@ public class NewBank {
     public synchronized String processRequest(Customer customer, String request) throws IOException {
         if (customers.containsKey(customer.getUserName())) {
             switch (request) {
-                case "SHOWMYACCOUNTS":
+                case "1": //Show My Accounts
                     return showMyAccounts(customer);
-                case "ADDACCOUNT":
+                case "2": //New Account
                     return "Account Added";
                 default:
                     return "FAIL";

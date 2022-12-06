@@ -45,20 +45,26 @@ public class NewBankClientHandler extends Thread {
                 // appropriate customer object.
                 if (customerToLogin != null) {
                     out.println("Log In Successful! \nWhat do you want to do?");
+                    out.println("1. Show My Accounts");
+                    out.println("2. New Account");
+                    out.println("3. Move");
+                    out.println("4. Pay");
+                    out.println("5. Change Password");
+                    out.println("6. Log Out");
                     while (true) {
                         String request = in.readLine();
                         //If user wishes to log out, reset customerToLogin and break, print status.
-                        if (request.equals("LOGOUT")) {
+                        if (request.equals("6")) {
                             System.out.println("Request from " + customerToLogin.getUserName());
                             customerToLogin = null;
                             out.println("Logging out.\n");
                             break;
                         }
-                        if (request.equals("ADDACCOUNT")) {
+                        if (request.equals("2")) { //If user wishes to create a new account
                             addAccount(customerToLogin);
                         }
 
-                        if (request.equals("CHANGEPASS")) {
+                        if (request.equals("5")) { //If user wishes to change password
                             changePassword(customerToLogin);
                         }
 
@@ -91,7 +97,7 @@ public class NewBankClientHandler extends Thread {
             out.println("Select 1 to log in or 2 to register");
             String loginOrRegister = in.readLine();
             if (loginOrRegister.equals("1")) {
-                out.println("Enter Username");
+                out.println("Enter Username (Your first and lastname is your username eg BhagySmith)");
                 String userName = in.readLine();
                 out.println("Enter Password");
                 String password = in.readLine();
