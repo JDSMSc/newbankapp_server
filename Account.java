@@ -9,12 +9,14 @@ public class Account {
 
     private String accountName;
     private int idNumber;
+    private String accountCurrency;
 
     //Set account type to 1-"CURRENT", 2-"SAVING" or 3-"MULTI"
-    public Account(String accountName, double openingBalance, int type) {
+    public Account(String accountName, double openingBalance, int type, String accountCurrency) {
         this.accountName = accountName;
         this.openingBalance = openingBalance;
         this.accountType = type;
+        this.accountCurrency = accountCurrency;
 
         //Generate new random 7 digit number for Account idNumber.
         Random rand = new Random();
@@ -23,7 +25,7 @@ public class Account {
     }
 
     public String toString() {
-        return (this.getType() + ": " + accountName + ": " + openingBalance);
+        return (this.getType() + ": " + accountName + ": " + openingBalance + " " + accountCurrency);
     }
 
     //Returns the type of account to the program.

@@ -19,14 +19,19 @@ public class NewBankClientHandler extends Thread {
         out = new PrintWriter(s.getOutputStream(), true);
     }
 
-    private String addAccount(Customer customer ) throws IOException {
+    private String addAccount(Customer customer) throws IOException {
         out.println("Account Type: 1. Current 2. Savings 3. Multi-Currency");
         int accountType = Integer.parseInt(in.readLine());
+        String currency = "GBP"; //Default currency
+        if (accountType == 3) {
+            out.println("Enter Currency");
+            currency = in.readLine();
+        }
         out.println("Enter Account Name");
         String accountName = in.readLine();
         out.println("Enter Initial Deposit");
         String initialDeposit = in.readLine();
-        customer.addAccount(new Account(accountName, Double.parseDouble(initialDeposit), accountType));
+        customer.addAccount(new Account(accountName, Double.parseDouble(initialDeposit), accountType, currency));
         return "Account Created";
     }
 
@@ -103,11 +108,16 @@ public class NewBankClientHandler extends Thread {
                 String password = in.readLine();
                 out.println("Account Type: 1. Current 2. Savings 3. Multi-Currency");
                 int accountType = Integer.parseInt(in.readLine());
+                String currency = "GBP"; //Default currency
+                if (accountType == 3) {
+                    out.println("Enter Currency");
+                    currency = in.readLine();
+                }
                 out.println("Account Name");
                 String accountName = in.readLine();
                 out.println("Enter Initial Deposit");
                 String initialDeposit = in.readLine();
-                return bank.addCustomer(firstName, lastName, email, password, accountType, accountName, Double.parseDouble(initialDeposit));
+                return bank.addCustomer(firstName, lastName, email, password, accountType, accountName, Double.parseDouble(initialDeposit), currency);
             }
 
         } catch (IOException e) {
@@ -140,8 +150,7 @@ public class NewBankClientHandler extends Thread {
             } else {
                 out.println("\nIncorrect current password entered, returning to menu.");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
