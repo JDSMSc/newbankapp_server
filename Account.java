@@ -1,4 +1,4 @@
-package newbank.server;
+package newbankapp_server;
 
 import java.util.Random;
 
@@ -26,6 +26,23 @@ public class Account {
 
     public String toString() {
         return (this.getType() + ": " + accountName + ": " + openingBalance + " " + accountCurrency);
+    }
+
+    // method to return the account ID number
+    public int getAccountID(){
+        return this.idNumber;
+    }
+
+    // method to return account balance
+    public double getBalance(){
+        return this.openingBalance;
+    }
+
+    // method to update the balance
+    public double updateBalance(double balance){
+        this.openingBalance = balance;
+        return this.openingBalance;
+
     }
 
     //Returns the type of account to the program.

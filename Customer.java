@@ -1,4 +1,4 @@
-package newbank.server;
+package newbankapp_server;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,11 @@ public class Customer {
 	}
 	public String getPassword() {
 		return this.password;
+	}
+
+	// New method to return the actual arraylist of accounts.
+	public ArrayList<Account> getAccounts() {
+		return this.accounts;
 	}
 
 	public void setPassword(String newPassword){

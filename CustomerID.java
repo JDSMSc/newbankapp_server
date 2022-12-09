@@ -1,4 +1,4 @@
-package newbank.server;
+package newbankapp_server;
 
 public class CustomerID {
 	private String key;
