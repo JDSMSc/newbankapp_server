@@ -1,10 +1,11 @@
-package newbank.server;
+package newbankapp_server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class NewBankClientHandler extends Thread {
 
@@ -62,10 +63,16 @@ public class NewBankClientHandler extends Thread {
                         }
                         if (request.equals("2")) { //If user wishes to create a new account
                             addAccount(customerToLogin);
+                            System.out.println("Request from " + customerToLogin.getUserName());   
                         }
 
                         if (request.equals("5")) { //If user wishes to change password
                             changePassword(customerToLogin);
+                        }
+
+                        // If user wishes to move funds between their own accouns
+                        if (request.equals("3")) {
+                            moveFunds(customerToLogin);
                         }
 
                         System.out.println("Request from " + customerToLogin.getUserName() + " requesting " + request);
@@ -158,6 +165,83 @@ public class NewBankClientHandler extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // method to move funds between accounts owned by the logged in user
+    private void moveFunds(Customer customer) {
+
+        // set i to 1
+        int i = 1;
+
+        // init hashmap for linking i to an account
+        HashMap<Integer, Account> numberedAccount = new HashMap<>(); 
+
+
+        // loop over all owned accounts
+        for (Account account : customer.getAccounts()){
+
+            // print i followed by an account
+            out.print(i + ". ");
+            out.println(account.toString());
+            
+            // add to hashmap
+            numberedAccount.put(i, account);
+
+            // increment
+            i++;
+        }
+
+        try {
+
+            // get account user wants to send FROM
+            out.println("Please select an account to move FROM: ");
+            int from = Integer.parseInt(in.readLine());
+
+            // get account user wants to send TO
+            out.println("Please select an account to move TO: ");
+            int to = Integer.parseInt(in.readLine());
+
+            // check that the inputs are mapped to accounts
+            if(!(numberedAccount.containsKey(from)) || !(numberedAccount.containsKey(to))){
+                out.println("One or more invalid account selected, try again.");
+                moveFunds(customer);
+            }
+
+            // get the account objects using hashmap created earlier in method
+            Account account_from = numberedAccount.get(from);
+            Account account_to = numberedAccount.get(to);
+
+            // init amount to enter while loop
+            double amount = -1;
+
+            // keep asking for amount until it is acceptable
+            while(amount < 0 || amount > account_from.getBalance()){
+                out.print("Available balance: ");
+                out.println(account_from.getBalance()); 
+                out.println("Please enter the amount you wish to move: ");
+                amount = Double.parseDouble(in.readLine());
+            }
+
+            // update balances
+            account_from.updateBalance(account_from.getBalance() - amount);
+            account_to.updateBalance(account_to.getBalance() + amount);
+
+            // confirm to user
+            out.println(amount + " moved from " + account_from.getType() + " to " + account_to.getType());
+
+
+            // print new balances
+            out.println("Account(ID): " + account_from.getAccountID() + " new balance: " + account_from.getBalance());
+            out.println("Account(ID): " + account_to.getAccountID() + " new balance: " + account_to.getBalance());
+
+            
+        // catch exceptions
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (NumberFormatException e){
+            out.println("Error, try again.");
+            moveFunds(customer);
         }
     }
 

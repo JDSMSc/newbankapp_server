@@ -1,5 +1,4 @@
-package newbank.server;
-
+package newbankapp_server;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,10 +66,16 @@ public class NewBank {
     public synchronized String processRequest(Customer customer, String request) throws IOException {
         if (customers.containsKey(customer.getUserName())) {
             switch (request) {
+
                 case "1": //Show My Accounts
                     return showMyAccounts(customer);
+
                 case "2": //New Account
                     return "Account Added";
+
+                case "3": //Move funds
+                    return "Funds moved";
+
                 default:
                     return "FAIL";
             }
