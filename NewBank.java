@@ -76,8 +76,11 @@ public class NewBank {
                 case "3": //Move funds
                     return "Funds moved";
 
+                case "5": //Loan listed
+                return "Micro Loan Listed";
+
                 default:
-                    return "FAIL";
+                    return "Under Development";
             }
         }
         return "FAIL - Customer not found";
