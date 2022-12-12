@@ -20,21 +20,6 @@ public class NewBankClientHandler extends Thread {
         out = new PrintWriter(s.getOutputStream(), true);
     }
 
-    private String addAccount(Customer customer) throws IOException {
-        out.println("Account Type: 1. Current 2. Savings 3. Multi-Currency");
-        int accountType = Integer.parseInt(in.readLine());
-        String currency = "GBP"; //Default currency
-        if (accountType == 3) {
-            out.println("Enter Currency");
-            currency = in.readLine();
-        }
-        out.println("Enter Account Name");
-        String accountName = in.readLine();
-        out.println("Enter Initial Deposit");
-        String initialDeposit = in.readLine();
-        customer.addAccount(new Account(accountName, Double.parseDouble(initialDeposit), accountType, currency));
-        return "Account Created";
-    }
 
     public void run() {
         //While loop to continue taking login attempts until success. Once successful it will
@@ -50,29 +35,32 @@ public class NewBankClientHandler extends Thread {
                     out.println("2. New Account");
                     out.println("3. Move");
                     out.println("4. Pay");
-                    out.println("5. Change Password");
-                    out.println("6. Log Out");
+                    out.println("5. MicroLoan Service");
+                    out.println("6. Change Password");
+                    out.println("7. Log Out");
                     while (true) {
                         String request = in.readLine();
                         //If user wishes to log out, reset customerToLogin and break, print status.
-                        if (request.equals("6")) {
+                        if (request.equals("2")) { //If user wishes to create a new account
+                            addAccount(customerToLogin);
+                            System.out.println("Request from " + customerToLogin.getUserName());
+                        }
+                        // If user wishes to move funds between their own accouns
+                        if (request.equals("3")) {
+                            moveFunds(customerToLogin);
+                        }
+                        if (request.equals("5")) {
+                            microLoanService(customerToLogin);
+                        }
+
+                        if (request.equals("6")) { //If user wishes to change password
+                            changePassword(customerToLogin);
+                        }
+                        if (request.equals("7")) {
                             System.out.println("Request from " + customerToLogin.getUserName());
                             customerToLogin = null;
                             out.println("Logging out.\n");
                             break;
-                        }
-                        if (request.equals("2")) { //If user wishes to create a new account
-                            addAccount(customerToLogin);
-                            System.out.println("Request from " + customerToLogin.getUserName());   
-                        }
-
-                        if (request.equals("5")) { //If user wishes to change password
-                            changePassword(customerToLogin);
-                        }
-
-                        // If user wishes to move funds between their own accouns
-                        if (request.equals("3")) {
-                            moveFunds(customerToLogin);
                         }
 
                         System.out.println("Request from " + customerToLogin.getUserName() + " requesting " + request);
@@ -175,21 +163,23 @@ public class NewBankClientHandler extends Thread {
         int i = 1;
 
         // init hashmap for linking i to an account
-        HashMap<Integer, Account> numberedAccount = new HashMap<>(); 
+        HashMap<Integer, Account> numberedAccount = new HashMap<>();
 
 
         // loop over all owned accounts
-        for (Account account : customer.getAccounts()){
+        for (Account account : customer.getAccounts()) {
+            if (account.getType() != "Micro Loan Account") {
+                // print i followed by an account
+                out.print(i + ". ");
+                out.println(account.toString());
 
-            // print i followed by an account
-            out.print(i + ". ");
-            out.println(account.toString());
-            
-            // add to hashmap
-            numberedAccount.put(i, account);
+                // add to hashmap
+                numberedAccount.put(i, account);
 
-            // increment
-            i++;
+                // increment
+                i++;
+            }
+
         }
 
         try {
@@ -203,7 +193,7 @@ public class NewBankClientHandler extends Thread {
             int to = Integer.parseInt(in.readLine());
 
             // check that the inputs are mapped to accounts
-            if(!(numberedAccount.containsKey(from)) || !(numberedAccount.containsKey(to))){
+            if (!(numberedAccount.containsKey(from)) || !(numberedAccount.containsKey(to))) {
                 out.println("One or more invalid account selected, try again.");
                 moveFunds(customer);
             }
@@ -216,9 +206,9 @@ public class NewBankClientHandler extends Thread {
             double amount = -1;
 
             // keep asking for amount until it is acceptable
-            while(amount < 0 || amount > account_from.getBalance()){
+            while (amount < 0 || amount > account_from.getBalance()) {
                 out.print("Available balance: ");
-                out.println(account_from.getBalance()); 
+                out.println(account_from.getBalance());
                 out.println("Please enter the amount you wish to move: ");
                 amount = Double.parseDouble(in.readLine());
             }
@@ -235,13 +225,80 @@ public class NewBankClientHandler extends Thread {
             out.println("Account(ID): " + account_from.getAccountID() + " new balance: " + account_from.getBalance());
             out.println("Account(ID): " + account_to.getAccountID() + " new balance: " + account_to.getBalance());
 
-            
-        // catch exceptions
-        } catch (IOException e){
+
+            // catch exceptions
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             out.println("Error, try again.");
             moveFunds(customer);
+        }
+    }
+
+    private void addAccount(Customer customer) throws IOException {
+        out.println("Account Type: 1. Current 2. Savings 3. Multi-Currency");
+        int accountType = Integer.parseInt(in.readLine());
+        String currency = "GBP"; //Default currency
+        if (accountType == 3) {
+            out.println("Enter Currency");
+            currency = in.readLine();
+        }
+        out.println("Enter Account Name");
+        String accountName = in.readLine();
+        out.println("Enter Initial Deposit");
+        String initialDeposit = in.readLine();
+        customer.addAccount(new Account(accountName, Double.parseDouble(initialDeposit), accountType, currency));
+    }
+
+    private void microLoanService(Customer customer) {
+        // set i to 1
+        int i = 1;
+
+        // init hashmap for linking i to an account
+        HashMap<Integer, Account> numberedAccount = new HashMap<>();
+
+
+        // loop over all owned accounts
+        for (Account account : customer.getAccounts()) {
+
+            // print i followed by an account
+            out.print(i + ". ");
+            out.println(account.toString());
+
+            // add to hashmap
+            numberedAccount.put(i, account);
+
+            // increment
+            i++;
+        }
+        try {
+            // get account user wants to send FROM
+            out.println("Please select an account to loan FROM: ");
+            int loanFrom = Integer.parseInt(in.readLine());
+            // check that the inputs are mapped to accounts
+            if (!(numberedAccount.containsKey(loanFrom))) {
+                out.println("One or more invalid account selected, try again.");
+                microLoanService(customer);
+            }
+            Account account_loan_from = numberedAccount.get(loanFrom);
+            out.println("Enter amount to list for loan");
+            double loanAmount = Double.parseDouble(in.readLine());
+            if (loanAmount >= account_loan_from.getBalance()) {
+                out.println("Loan amount must be less than account balance");
+                microLoanService(customer);
+            } else {
+                account_loan_from.updateBalance(account_loan_from.getBalance() - loanAmount);
+            }
+            out.println("Enter number of months to repay");
+            int loanMonths = Integer.parseInt(in.readLine());
+            out.println("Enter interest rate");
+            double interest = Double.parseDouble(in.readLine());
+            customer.addAccount(new Account("Micro Loan", loanAmount, 4, "GBP", loanMonths, interest));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            out.println("Error, try again.");
+            microLoanService(customer);
         }
     }
 
