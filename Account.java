@@ -1,5 +1,6 @@
 package newbankapp_server;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Account {
@@ -22,6 +23,8 @@ public class Account {
         Random rand = new Random();
         int randNum = rand.nextInt(9000000) + 1000000;
         this.idNumber = randNum;
+
+
     }
 
     public String toString() {
