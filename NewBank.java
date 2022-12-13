@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.io.BufferedReader;
+import java.util.ArrayList;
+
 
 import static java.lang.System.out;
 
@@ -13,24 +15,49 @@ public class NewBank {
     private static final NewBank bank = new NewBank();
     private HashMap<String, Customer> customers;
     private BufferedReader in;
+    private ArrayList<Account> accounts; 
+
 
     private NewBank() {
         customers = new HashMap<>();
+        accounts = new ArrayList<>();
         addTestData();
     }
 
+    // storing accounts at the bank level
+    public void addAccount(Account account) {
+		accounts.add(account);		
+	}
+
+    // return all accounts at bank
+    public ArrayList<Account> allAccounts(){
+        return this.accounts;
+    }
+
+
     private void addTestData() {
         Customer bhagy = new Customer("bhagy@gmail.com", "password", "Bhagy", "Smith");
+        // associate accounts with customer
         bhagy.addAccount(new Account("Main", 1000.0, 1, "GBP"));
         bhagy.addAccount(new Account("Secondary", 100000.0, 2, "GBP"));
+        // associate accounts with bank
+        addAccount(new Account("Main", 1000.0, 1, "GBP"));
+        addAccount(new Account("Secondary", 100000.0, 2, "GBP"));
+        // hashmap customer
         customers.put(bhagy.getUserName(), bhagy);
 
         Customer christina = new Customer("christina@gmail.com", "password", "Christina", "Smith");
         christina.addAccount(new Account("Savings", 1500.0, 2, "GBP"));
+
+        addAccount(new Account("Savings", 1500.0, 2, "GBP"));
+
         customers.put(christina.getUserName(), christina);
 
         Customer john = new Customer("john@gmail.com", "password", "John", "Smith");
         john.addAccount(new Account("Checking", 250.0, 3, "GBP"));
+
+        addAccount(new Account("Checking", 250.0, 3, "GBP"));
+
         customers.put(john.getUserName(), john);
     }
 
@@ -76,8 +103,11 @@ public class NewBank {
                 case "3": //Move funds
                     return "Funds moved";
 
+                case "4": //Loan listed
+                    return "Funds sent";
+
                 case "5": //Loan listed
-                return "Micro Loan Listed";
+                    return "Micro Loan Listed";
 
                 default:
                     return "Under Development";
