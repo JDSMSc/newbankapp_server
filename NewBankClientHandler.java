@@ -230,6 +230,10 @@ public class NewBankClientHandler extends Thread {
             out.println("Account(ID): " + account_from.getAccountID() + " new balance: " + account_from.getBalance());
             out.println("Account(ID): " + account_to.getAccountID() + " new balance: " + account_to.getBalance());
 
+            // add as transaction
+            Transaction transaction = new Transaction(account_from.getAccountID(), account_to.getAccountID(), amount);
+            bank.addTransaction(transaction);
+
 
             // catch exceptions
         } catch (IOException e) {
@@ -392,6 +396,10 @@ public class NewBankClientHandler extends Thread {
 
             // print new balance
             out.println("Account(ID): " + account_from.getAccountID() + " new balance: " + account_from.getBalance());
+
+            // add as transaction
+            Transaction transaction = new Transaction(account_from.getAccountID(), account_to.getAccountID(), amount);
+            bank.addTransaction(transaction);
 
             
         // catch exceptions

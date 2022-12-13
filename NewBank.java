@@ -16,11 +16,13 @@ public class NewBank {
     private HashMap<String, Customer> customers;
     private BufferedReader in;
     private ArrayList<Account> accounts; 
+    private ArrayList<Transaction> transactions; 
 
 
     private NewBank() {
         customers = new HashMap<>();
         accounts = new ArrayList<>();
+        transactions = new ArrayList<>(); 
         addTestData();
     }
 
@@ -32,6 +34,16 @@ public class NewBank {
     // return all accounts at bank
     public ArrayList<Account> allAccounts(){
         return this.accounts;
+    }
+
+    // add transaction
+    public void addTransaction(Transaction transaction) {
+		transactions.add(transaction);		
+	}
+
+    // return all accounts at bank
+    public ArrayList<Transaction> allTransactions(){
+        return this.transactions;
     }
 
 
